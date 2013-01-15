@@ -12,7 +12,7 @@ public class Program {
 	public int evaluate(){
 		
 		first.evaluate(variables);
-		return variables.get("x");
+		return new VariableExpression("x").evaluate(variables);
 	}
 	public void setVariable(String variable, int value) {
 		variables.put(variable, value);

@@ -92,15 +92,23 @@ condition
   |  'false'
   | left=expression op=('>' | '>=' | '<' | '<=' | '=' | '!=')^ right=expression
 ;
-
+// requires backtracking
+// http://www.antlr.org/wiki/display/ANTLR3/How+to+remove+global+backtracking+from+your+grammar
+//expression
+//  : value_or_brackets '+'^ expression
+//  | value_or_brackets '-'^ expression
+//  | value_or_brackets '*'^ expression
+//  | value_or_brackets '/'^ expression
+//  | value_or_brackets
+//;
 expression
-  : value '+'^ expression
-  | value '-'^ expression
-  | value '*'^ expression
-  | value '/'^ expression
+  : value_or_brackets (('+'^ expression) | ('-'^ expression) | ('/'^ expression) | ('*'^ expression))?
+  ;
+
+value_or_brackets
+  : '('! expression ')'!
   | value
 ;
-
 value
   : INT
   | ID

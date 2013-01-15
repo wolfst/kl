@@ -21,7 +21,7 @@ evaluator returns [Program p]
 statement returns [Statement s]
   : 'skip' {$s = new SkipStatement();}
   | 'abort' {$s = new AbortStatement();}
-  | ^('if' condition t=statement (e=statement)?) {new IfStatement($condition.c, $t.s, $e.s);}
+  | ^('if' condition t=statement (e=statement)?) {$s = new IfStatement($condition.c, $t.s, $e.s);}
   | ^(':=' var=ID v=expression) {$s = new AssignmentStatement($var.text, $v.e);}
   | ^(';' f=statement n=statement) {$s = new SequenceStatement($f.s, $n.s);}
   | ^('while' c=condition st=statement) {$s = new WhileStatement($c.c, $st.s);}
