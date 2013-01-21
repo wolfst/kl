@@ -7,7 +7,12 @@ By convention, the first parameter passed to a KL program is saved in the variab
 
 The compiler and interpreter use the ANTLR framework for parsing and compilation into binary code is achieved via the LLVM framework and GCC.
 
-It was tested on Mac OS X 64bit.
+Download
+--------
+
+Here you can download directly the compiled [compiler](https://github.com/wolfst/kl/blob/master/klc.jar?raw=true) and [interpreter](https://github.com/wolfst/kl/blob/master/kli.jar?raw=true).
+
+They were tested on Mac OS X 64bit with LLVM 3.1. Note that you have to install the LLVM framework before running.
 
 
 LICENSE
