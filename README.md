@@ -2,12 +2,12 @@ KL Interpreter and Compiler
 =======================================
 
 This is a simple compiler and interpreter for a simple language called KL.
+In a nutshell, KL supports integer variables, if-then-else statements and while-loops. See the grammar file for a detailed description.
+By convention, the first parameter passed to a KL program is saved in the variable 'a' and the program will return the value of the variable 'x' as result.
 
-In a nutshell, KL supports integer variables, if-then-else statements and while-loops. See the grammar file for a detailed definition.
+The compiler and interpreter use the ANTLR framework for parsing and compilation into binary code is achieved via the LLVM framework and GCC.
 
-Parameters can be passed to a KL programm. They are directly assigned to the variables "a" (first parameter), "b" (second parameter), ...
-
-The result, which will be returned, has to be saved in the variable with the name "x".
+It was tested on Mac OS X 64bit.
 
 
 LICENSE
