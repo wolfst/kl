@@ -13,6 +13,16 @@ import java.util.HashMap;
 @lexer::header {
 package net.wolf.stephan.kl;
 }
+@members {
+  public void displayRecognitionError(String[] tokenNames,
+                                     RecognitionException e) {
+    String hdr = getErrorHeader(e);
+    String msg = getErrorMessage(e, tokenNames);
+    System.err.println("error:" + hdr);
+    System.err.println("error:" + msg);
+    throw new RuntimeException("syntax error");
+  }
+}
 
 
 

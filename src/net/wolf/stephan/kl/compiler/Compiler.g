@@ -10,7 +10,16 @@ options {
 package net.wolf.stephan.kl.compiler;
 }
 @members {
-  Map<String, Integer> variables = new HashMap<String, Integer>();
+  public void displayRecognitionError(String[] tokenNames,
+                                        RecognitionException e) {
+    String hdr = getErrorHeader(e);
+    String msg = getErrorMessage(e, tokenNames);
+    System.err.println("error:" + hdr);
+    System.err.println("error:" + msg);
+    throw new RuntimeException("syntax error");
+  }
+
+
 }
 
 evaluator returns [Program p]

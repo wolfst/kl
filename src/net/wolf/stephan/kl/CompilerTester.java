@@ -1,103 +1,76 @@
 package net.wolf.stephan.kl;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import static org.junit.Assert.*;
+
 import java.util.Random;
 
-import net.wolf.stephan.kl.compiler.Compiler;
-import net.wolf.stephan.kl.compiler.LineWriter;
-import net.wolf.stephan.kl.compiler.Program;
-
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CharStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.junit.Test;
 
 public class CompilerTester {
 	private Random rand = new Random();
 
-	private LineWriter createFile(String outputFile) throws IOException {
-		// Create file
-		FileWriter fstream = new FileWriter(outputFile);
-		return new LineWriter(new BufferedWriter(fstream));
 
-	}
-	
-	private int runCommand(String cmd){
-        try {
-            Process p = Runtime.getRuntime().exec(cmd);
-            
-            int ret = p.waitFor();
-            
-            BufferedReader stdInput = new BufferedReader(new 
-                 InputStreamReader(p.getInputStream()));
-
-            BufferedReader stdError = new BufferedReader(new 
-                 InputStreamReader(p.getErrorStream()));
-
-            String s;
-            // read the output from the command
-            while ((s = stdInput.readLine()) != null) {
-                System.out.println(s);
-            }
-            
-            // read any errors from the attempted command
-            while ((s = stdError.readLine()) != null) {
-                System.out.println(s);
-            }
-            
-            return ret;
-        }
-        catch (IOException e) {
-        	System.out.println("Could not execute '"+cmd+"'");
-            e.printStackTrace();
-            System.exit(-1);
-        }catch(InterruptedException e){
-        	System.out.println("The execution of '"+cmd+"' was interrupted!");
-        	System.exit(-1);
-        }
-		return -1;
-	}
-
-	private Compiler createCompiler(String testString){
-
-		CharStream stream = new ANTLRStringStream(testString);
-		KLLexer lexer = new KLLexer(stream);
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		KLParser parser = new KLParser(tokens);
-		CommonTreeNodeStream nodeStream = new CommonTreeNodeStream(
-				parser.evaluator().tree);
-
-		parser.reset();
-		System.out.println(parser.evaluator().tree.toStringTree());
-
-		Compiler interpreter = new Compiler(nodeStream);
-		return interpreter;
-	}
 
 	@Test
-	public void testSimpleAssignment() throws Exception {
-		//Compiler compiler = createCompiler("x:= 1");
-		//
-		//"x:= (1+3-2)*4/2"
-		Compiler compiler = createCompiler("x:=10;y:= 1; while x>0 do y:= y*x; x:= x-1 od; x:=y");
-		
+	public void simpleAssignment() throws Exception {
 		String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
-		LineWriter file = createFile(methodName+".ll");
-		Program p = compiler.evaluator();
-		p.evaluate(file);
-		file.flush();
-		file.close();
-		
-		
-		runCommand("llc -march=x86-64 -disable-cfi "+methodName+".ll");
-		runCommand("g++ -o "+methodName+" "+methodName+".s");
-		runCommand("./"+methodName);
-		//assertEquals(1, );
-		
+		CompilerProgram.compile("test/"+methodName+".kl", "test/"+methodName, false);
+		int a = rand.nextInt(1000);
+		assertEquals(a%256, CompilerProgram.runCommand("./test/"+methodName+" "+a+ " "+a));
 	}
+	
+	@Test
+	public void ifThen() throws Exception {
+		String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
+		CompilerProgram.compile("test/"+methodName+".kl", "test/"+methodName, false);
+		assertEquals(1, CompilerProgram.runCommand("./test/"+methodName+ " 1"));
+	}
+	@Test
+	public void ifElse() throws Exception {
+		String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
+		CompilerProgram.compile("test/"+methodName+".kl", "test/"+methodName, false);
+		assertEquals(2, CompilerProgram.runCommand("./test/"+methodName+ " 0"));
+	}
+	
+	@Test
+	public void sequence() throws Exception {
+		String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
+		CompilerProgram.compile("test/"+methodName+".kl", "test/"+methodName, false);
+		assertEquals(3, CompilerProgram.runCommand("./test/"+methodName));
+	}
+	@Test
+	public void expression() throws Exception {
+		String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
+		CompilerProgram.compile("test/"+methodName+".kl", "test/"+methodName, false);
+		int a = rand.nextInt(1000);
+		assertEquals(a*2%256, CompilerProgram.runCommand("./test/"+methodName+" "+a));
+	}
+	@Test
+	public void testWhile() throws Exception {
+		String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
+		CompilerProgram.compile("test/"+methodName+".kl", "test/"+methodName, false);
+		int a = rand.nextInt(100);
+		int expected;
+		if(a >0) expected = a;
+		else expected = 0;
+		assertEquals(expected%256, CompilerProgram.runCommand("./test/"+methodName+ " "+a));
+	}
+	@Test
+	public void fak() throws Exception {
+		String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
+		CompilerProgram.compile("test/"+methodName+".kl", "test/"+methodName, false);
+		int a = rand.nextInt(12);
+		int fak = 1;
+		for(int i =1; i<= a; ++i)
+			fak = fak*i;
+		assertEquals(fak%256, CompilerProgram.runCommand("./test/"+methodName+ " "+a));
+	}
+	/*
+	// This test must fail
+	@Test(timeout 10)
+	public void abort() throws Exception {
+		String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
+		CompilerProgram.compile("test/"+methodName+".kl", "test/"+methodName, false);
+		CompilerProgram.runCommand("./test/"+methodName);
+	}*/
 }

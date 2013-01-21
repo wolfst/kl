@@ -12,7 +12,14 @@ options {
   import java.util.Map;
 }
 @members {
-  Map<String, Integer> variables = new HashMap<String, Integer>();
+  public void displayRecognitionError(String[] tokenNames,
+                                        RecognitionException e) {
+    String hdr = getErrorHeader(e);
+    String msg = getErrorMessage(e, tokenNames);
+    System.err.println("error:" + hdr);
+    System.err.println("error:" + msg);
+    throw new RuntimeException("syntax error");
+  }
 }
 
 evaluator returns [Program p]
@@ -34,7 +41,7 @@ condition returns [Condition c]
     c = new CompareCondition($op.text, $left.e, $right.e);
   }
 ;
-
+ 
 expression returns [Expression e]
   : INT {$e = new ConstExpression(Integer.parseInt($INT.text));}
   | ID {$e = new VariableExpression($ID.text);}
