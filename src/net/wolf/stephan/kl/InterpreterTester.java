@@ -4,13 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Random;
 
-import net.wolf.stephan.kl.interpreter.Interpreter;
-import net.wolf.stephan.kl.interpreter.Program;
-
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CharStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.junit.Test;
 
 public class InterpreterTester {
