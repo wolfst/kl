@@ -81,15 +81,17 @@ public class InterpreterProgram {
 			System.out.println();
 			lexer.reset();
 		}
+
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		KLParser parser = new KLParser(tokens);
 		if (debug) {
+			KLParser parser = new KLParser(tokens);
 			// Print Tree
 			System.out.println("Abstract Syntax Tree:");
 			System.out.println(parser.evaluator().tree.toStringTree());
 			System.out.println();
-			parser.reset();
+			tokens.reset();
 		}
+		KLParser parser = new KLParser(tokens);
 		CommonTreeNodeStream nodeStream = new CommonTreeNodeStream(parser.evaluator().tree);
 
 		Interpreter interpreter = new Interpreter(nodeStream);

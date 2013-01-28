@@ -129,18 +129,20 @@ public class CompilerProgram {
 			System.out.println();
 			lexer.reset();
 		}
+		lexer = new KLLexer(stream);
 		
 		
 		// Execute parser
-		KLParser parser = new KLParser(tokens);
 		if(debug){
+			KLParser parser = new KLParser(tokens);
 			// Print Tree
 			System.out.println("Abstract Syntax Tree");
 			System.out.println(parser.evaluator().tree.toStringTree());
 			System.out.println();
 			System.out.println();
-			parser.reset();
+			tokens.reset();
 		}
+		KLParser parser = new KLParser(tokens);
 		CommonTreeNodeStream nodeStream = new CommonTreeNodeStream(parser.evaluator().tree);
 		
 		
