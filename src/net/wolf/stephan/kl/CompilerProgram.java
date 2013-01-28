@@ -58,6 +58,7 @@ public class CompilerProgram {
 
 		boolean debug = false;
 		boolean error = false;
+		boolean optimize = false;
 		String outputFilename = null;
 		String file = null;
 		for (int i = 0; i< args.length; ++i) {
@@ -72,6 +73,8 @@ public class CompilerProgram {
 						break;
 					}
 					outputFilename= args[i];
+				}else if (arg.equals("-O") || arg.equals("--optimize")) {
+					optimize = true;
 				}
 				else {
 					System.err.println("error: unknown flag: " + arg);
@@ -89,7 +92,7 @@ public class CompilerProgram {
 		}
 
 		try {
-			compile(file, outputFilename, debug);
+			compile(file, outputFilename, debug, optimize);
 		} catch (Exception e) {
 			System.err.println("error: "+e.getMessage());
 		}
@@ -102,7 +105,7 @@ public class CompilerProgram {
 
 	}
 
-	public static void compile(String fileName, String outputFilename, boolean debug) throws Exception {
+	public static void compile(String fileName, String outputFilename, boolean debug, boolean optimize) throws Exception {
 		if(outputFilename == null){
 			Integer start = Math.max(fileName.lastIndexOf('/')+1, 0);
 			start = Math.max(start, fileName.lastIndexOf('\\')+1);
@@ -151,10 +154,18 @@ public class CompilerProgram {
 		file.flush();
 		file.close();
 
+		String intermediateFilename = outputFilename;
+		
+		if(optimize){
+			intermediateFilename += "_opt";
+			runCommand("opt -S -std-compile-opts "+outputFilename +".ll -o " + intermediateFilename + ".ll");
+		}
+		
 		// Compiling llvm code to assembler code
-		runCommand("llc -march=x86-64 -disable-cfi " + outputFilename + ".ll");
+		runCommand("llc -march=x86-64 -disable-cfi " + intermediateFilename + ".ll");
+		
 		// Assemble and link
-		runCommand("g++ -o " + outputFilename + " " + outputFilename + ".s");
+		runCommand("g++ -o " + outputFilename + " " + intermediateFilename + ".s");
 	}
 
 	private static LineWriter createFile(String outputFile) throws IOException {
