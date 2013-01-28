@@ -7,12 +7,41 @@ By convention, the first parameter passed to a KL program is saved in the variab
 
 The compiler and interpreter use the ANTLR framework for parsing and compilation into binary code is achieved via the LLVM framework and GCC.
 
+Example KL program
+--------
+
+	// The first paramater provided to the program
+	// will be saved in variable a
+	x:=a;
+	
+	// Calculate x!
+	y:= 1;
+	while x>0 do
+	y:= y*x; 
+	x:= x-1
+	od;
+	
+	// Return the result to variable x
+	// so it will be printed
+	x:= y
+
+
 Download
 --------
 
 Here you can download directly the compiled [compiler](https://github.com/wolfst/kl/blob/master/klc.jar?raw=true) and [interpreter](https://github.com/wolfst/kl/blob/master/kli.jar?raw=true).
 
-They were tested on Mac OS X 64bit with LLVM 3.1. Note that you have to install the LLVM framework before running.
+How to run the interpreter:
+
+	java -jar kli.jar <input_file> <value_for_variable_a>
+	
+How to run the compiler:
+
+	java -jar klc.jar --optimize <input_file> -o <output_file> && ./<output_file> <value_for_variable_a>
+
+_Note that you have to install the LLVM framework before running!_
+
+Tested on Mac OS X 64bit with LLVM 3.1.
 
 
 LICENSE

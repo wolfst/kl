@@ -1,1 +1,14 @@
-x:=a;y:= 1; while x>0 do y:= y*x; x:= x-1 od; x:=y
+// The first paramater provided to the program
+// will be saved in variable a
+x:=a;
+
+// Calculate x!
+y:= 1;
+while x>0 do
+y:= y*x; 
+x:= x-1
+od;
+
+// Return the result to variable x
+// so it will be printed
+x:= y
