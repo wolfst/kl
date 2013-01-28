@@ -25,7 +25,8 @@ package net.wolf.stephan.kl;
 }
 
 
-
+ // ------------- Lexer rules -------------
+ 
 ID 	:	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
     ;
 
@@ -43,11 +44,7 @@ COMMENT
     |   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
     ;
 
-WS  :   ( ' '
-        | '\t'
-        | '\r'
-        | '\n'
-        ) {$channel=HIDDEN;}
+WS  :   (' ' | '\t' | '\r' | '\n') {$channel=HIDDEN;}
     ;
 
 STRING
@@ -81,6 +78,8 @@ fragment
 UNICODE_ESC
     :   '\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
     ;
+    
+//------------- Parser rules -------------
 
 evaluator
   :  r=seq_statement EOF!;

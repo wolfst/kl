@@ -13,7 +13,7 @@ public class Program {
 	public void evaluate(LineWriter file) throws IOException{
 		
 		file.writeLn("; define string constant \"%d\\n\"");
-		file.writeLn("@s = internal constant [4 x i8] c\"%d\\0A\\00\"");
+		file.writeLn("@s = internal constant [12 x i8] c\"result: %d\\0A\\00\"");
 		file.writeLn("@sss = internal constant [4 x i8] c\"%s\\0A\\00\"");
 		file.writeLn("@ss = internal constant [26 x i8] c\"setting variable a to %d\\0A\\00\"");
 		file.writeLn("declare i32 @printf(i8 *, ...)");
@@ -21,7 +21,7 @@ public class Program {
 		
 		
 		file.writeLn("define i32 @main(i32 %argc, i8** %argv) { ");
-		file.writeLn("%ps = getelementptr [4 x i8]* @s, i64 0, i64 0");
+		file.writeLn("%ps = getelementptr [12 x i8]* @s, i64 0, i64 0");
 		file.writeLn("%pss = getelementptr [26 x i8]* @ss, i64 0, i64 0");
 		file.writeLn("%psss = getelementptr [4 x i8]* @sss, i64 0, i64 0");
 		
@@ -36,7 +36,7 @@ public class Program {
 		file.writeLn("%firstArgumentCharPtr = load i8** %firstArgumentCharPtrPtr");
 		file.writeLn("%firstArgument = call i32 @atoi(i8* %firstArgumentCharPtr)");
 		
-		file.writeLn("call i32 (i8 *, ...)* @printf(i8* %psss, i8* %firstArgumentCharPtr)");
+		//file.writeLn("call i32 (i8 *, ...)* @printf(i8* %psss, i8* %firstArgumentCharPtr)");
 		file.writeLn("call i32 (i8 *, ...)* @printf(i8* %pss, i32 %firstArgument)");
 		file.writeLn("br label %cont");
 		file.writeLn("cont: ");
